@@ -1,1 +1,160 @@
-{"sections":{"main":{"type":"main-product","blocks":{"vendor":{"type":"vendor","settings":{}},"title":{"type":"title","settings":{}},"price":{"type":"price","settings":{}},"payment_terms":{"type":"payment_terms","settings":{}},"separator":{"type":"separator","settings":{}},"description":{"type":"description","settings":{}},"variant_picker":{"type":"variant_picker","settings":{}},"quantity_selector":{"type":"quantity_selector","settings":{}},"buy_buttons":{"type":"buy_buttons","settings":{}},"pickup_availability":{"type":"pickup_availability","settings":{}},"complementary_products":{"type":"complementary_products","settings":{}}},"block_order":["vendor","title","price","payment_terms","separator","description","variant_picker","quantity_selector","buy_buttons","complementary_products"],"settings":{}},"related-products":{"type":"related-products","settings":{}}},"order":["main","related-products"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "vendor",
+          "disabled": true,
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "heading_tag": "h3"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_taxes_notice": false
+          }
+        },
+        "payment_terms": {
+          "type": "payment_terms",
+          "settings": {}
+        },
+        "separator": {
+          "type": "separator",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "hide_sold_out_variants": false,
+            "selector_style": "block",
+            "swatch_selector_style": "swatch",
+            "variant_image_options": "",
+            "variant_image_show_underline": false,
+            "size_chart_page": "סרגל-מידות-פאולה"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_payment_button": false,
+            "show_gift_card_recipient": true,
+            "atc_button_background": "",
+            "atc_button_text_color": "",
+            "payment_button_background": "",
+            "payment_button_text_color": ""
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "collapse_content": false,
+            "show_below_gallery": false
+          }
+        },
+        "accordion_mwp6JJ": {
+          "type": "accordion",
+          "settings": {
+            "show_below_gallery": false,
+            "icon": "none",
+            "title": "משלוחים",
+            "content": "<p>עד הבית או למקום העבודה שלך? משלוח מהיר ובטוח לאן שאת תחליטי.</p><p><strong>משתנה בהתאם למבצעים שמפורסמים באתר </strong></p><p><span style=\"text-decoration:underline\"><strong>זמני אספקה:</strong></span><br/>הנעל תגיע אליך עד 8 ימי עסקים מרגע ההזמנה.<br/>תודה על הסבלנות זה ישתלם לך!</p>",
+            "liquid": "",
+            "page": ""
+          }
+        },
+        "accordion_zNMkte": {
+          "type": "accordion",
+          "settings": {
+            "show_below_gallery": false,
+            "icon": "none",
+            "title": "החלפות והחזרות",
+            "content": "<p>החזרה תתאפשר עד 14 ימי עסקים מיום קבלת המוצר בתנאי שלא נעשה שימוש במוצר, לא נגרם נזק למוצר והוא מוחזר באריזתו המקורית.<br/>בעת החזרת המוצר תקבלי זיכוי בניכוי 5% מסך העסקה או 100 ₪ הזול מבניהם </p><p>בתוספת 30 ₪ דמי משלוח לאמצעי התשלום איתו ביצעת את ההזמנה ((לא תקף על פריטים אשר נמכרו במבצע )</p><p><br/>החזרת המוצר תוך עד 30 ימי עסקים מחברת המשלוחים.<br/>הזיכוי יוחזר לאמצעי התשלום איתו ביצעת את ההזמנה ויינתן תוך 14 ימי עסקים מקבלת המוצר במשרדינו.<br/>החלפה תתאפשר עד 14 ימי עסקים מיום קבלת המוצר בתנאי שלא נעשה שימוש במוצר, לא נגרם נזק למוצר והוא מוחזר באריזתו המקורית.<br/>החזרת המוצר תוך עד 10 ימי עסקים מחברת המשלוחים.<br/>ניתן לעשות זאת על ידי תיאום איסוף עם שירות הלקוחות בתוספת תשלום של 30 ₪ עבור דמי משלוח.</p><p><br/>2 החלפות ראשונות ללא תשלום, מההחלפה השלישית 50 ₪.הלקוחות בטלפון - 073-340-6260 (בתשלום 30₪)</p><p>* זיכוי כספי ברכישה באתר בטווח של 14 ימים </p>",
+            "liquid": "",
+            "page": ""
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "disabled": true,
+          "settings": {}
+        },
+        "complementary_products": {
+          "type": "complementary_products",
+          "settings": {
+            "title": "Pairs well with",
+            "products_count": 2,
+            "show_below_gallery": true,
+            "stack_products": false,
+            "show_quick_buy": true
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "payment_terms",
+        "separator",
+        "variant_picker",
+        "buy_buttons",
+        "description",
+        "accordion_mwp6JJ",
+        "accordion_zNMkte",
+        "quantity_selector",
+        "complementary_products"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "allow_transparent_header": false,
+        "transparent_header_use_primary_colors": false,
+        "container_size": "lg",
+        "product_info_size": 50,
+        "show_sticky_add_to_cart": false,
+        "center_basic_info": false,
+        "desktop_media_layout": "carousel_thumbnails_bottom",
+        "desktop_media_grid_gap": 30,
+        "mobile_controls": "dots",
+        "enable_media_autoplay": false,
+        "enable_video_looping": true,
+        "enable_image_zoom": true,
+        "max_image_zoom_level": 3
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": true,
+        "hide_product_information": false,
+        "stack_products": false,
+        "recommendations_count": 10,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 4,
+        "horizontal_spacing_factor": 1,
+        "vertical_spacing_factor": 1,
+        "subheading": "",
+        "title": "Related products",
+        "content": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related-products"
+  ]
+}

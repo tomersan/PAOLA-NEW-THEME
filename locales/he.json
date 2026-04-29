@@ -19,13 +19,13 @@
       "rss_feed": "פיד RSS"
     },
     "label": {
-      "color": "צבע",
+      "color": "צבע,color,colour",
       "white": "לבן",
-      "size": "מידה"
+      "size": "מידה,size"
     },
     "breadcrumb": {
       "label": "פירורי לחם",
-      "home": "דף הבית",
+      "home": "בית",
       "shop": "חנות"
     },
     "reviews": {
@@ -83,8 +83,9 @@
   "product": {
     "general": {
       "description": "תיאור",
-      "add_to_cart_button": "הוסף לעגלה",
-      "pre_order_button": "הזמן מראש",
+      "add_to_cart_button": "הוספה לסל",
+      "free_shipping_eligible": "משלוח חינם בקניית פריט זה",
+      "pre_order_button": "קני עכשיו",
       "sold_out_button": "אזל מהמלאי",
       "unavailable_button": "לא זמין",
       "added_to_cart": "התווסף לעגלת הקניות שלך!",
@@ -93,13 +94,13 @@
       "view_details": "הצג פרטים",
       "sold_out_badge": "אזל מהמלאי",
       "on_sale_badge": "במבצע",
-      "discount_badge_html": "חסוך {{ savings }}",
+      "discount_badge_html": "{{ savings }}",
       "sku": "מקט:",
       "variant": "וריאנט",
-      "view_in_space": "View in your space",
+      "view_in_space": "צפי במרחב",
       "taxes_included": "כולל מס.",
       "taxes_excluded": "לא כולל מס.",
-      "shipping_policy_html": "<a href=\"{{ link }}\" class=\"link\">דמי משלוח יחושבו<\/a> בעת התשלום",
+      "shipping_policy_html": " <a href=\"{{ link }}\" class=\"link link--accented\">משלוח מחושב</a> בקופה.",
       "size_chart": "טבלת מידות",
       "available_colors_count": {
         "one": "צבע {{ count }} זמין",
@@ -213,7 +214,7 @@
       "name": "שם",
       "email": "אימייל",
       "message": "הודעה",
-      "submit": "שלח",
+      "submit": "פרסם תגובה",
       "comment_sent": "התגובה שלך נשלחה. אנו נפרסם אותה בקרוב, מכיוון שהבלוג שלנו מבוקר.",
       "comment_published": "התגובה שלך פורסמה.",
       "count": {
@@ -228,66 +229,66 @@
       "name": "שם",
       "email": "אימייל",
       "message": "הודעה",
-      "submit": "שלח הודעה",
+      "submit": "שלחי הודעה",
       "success_message": "ההודעה שלך נשלחה."
     }
   },
   "customer": {
     "account": {
-      "title": "החשבון שלך",
+      "title": "החשבון שלי",
       "primary_address": "כתובת עיקרית",
-      "manage_addresses": "ניהול",
+      "manage_addresses": "נהל כתובות",
       "tagline": "הצג את כל ההזמנות שלך ונהל את פרטי חשבונך.",
       "orders": "הזמנות",
-      "logout": "יציאה",
+      "logout": "התנתק",
       "no_orders": "עדיין לא ביצעת כל הזמנה.",
       "continue_shopping": "המשך בקניות"
     },
     "login": {
-      "title": "כניסה",
+      "title": "ברוכה השבה חברה!",
       "instructions": "הזן את כתובת הדוא\"ל והסיסמה לכניסה:",
       "no_account": "אין לך חשבון?",
       "email": "אימייל",
-      "password": "סיסמה",
-      "submit": "כניסה",
-      "forgot_password": "שכחת את הסיסמה?",
+      "password": "סיסמא",
+      "submit": "התחברי",
+      "forgot_password": "שכחת סיסמא?",
       "sign_up": "הרשמה"
     },
     "recover_password": {
-      "title": "שחזור סיסמה",
+      "title": "לאפס את הסיסמה שלך",
       "instructions": "הזן את כתובת הדוא\"ל שלך כדי לשחזר את הסיסמה שלך:",
       "remember_password": "זוכר את הסיסמה שלך?",
-      "email": "אימייל",
-      "submit": "שחזור",
+      "email": "דוא\"ל",
+      "submit": "שלחי",
       "back_to_login": "חזרה לכניסה למערכת",
       "success_message": "נשלח אימייל לכתובת שלך עם הוראות לאיפוס הסיסמה שלך."
     },
     "register": {
-      "title": "הרשמה",
+      "title": "צרי חשבון חדש!",
       "instructions": "נא למלא את הפרטים שלהלן:",
       "already_have_account": "כבר יש לך חשבון?",
       "first_name": "שם פרטי",
       "last_name": "שם משפחה",
-      "email": "אימייל",
+      "email": "דוא\"ל",
       "password": "סיסמה",
       "accepts_marketing": "הירשם לידיעון שלנו",
-      "submit": "צור חשבון",
+      "submit": "צרי לעצמך חשבון!",
       "login": "כניסה"
     },
     "activate_account": {
-      "title": "הפעלת החשבון",
+      "title": "הפעילי את החשבון",
       "instructions": "הזן סיסמה ליצירת החשבון שלך:",
-      "password": "סיסמה",
-      "password_confirmation": "אישור הסיסמה",
-      "submit": "הפעלה",
-      "cancel": "ביטול"
+      "password": "סיסמא",
+      "password_confirmation": "אשר סיסמא",
+      "submit": "הפעילי את בחשבון",
+      "cancel": "דחה הזמנה"
     },
     "reset_password": {
-      "title": "איפוס סיסמה",
+      "title": "אפסי את סיסמת החשבון",
       "instructions": "הזן סיסמה חדשה:",
       "password": "סיסמה",
-      "password_confirmation": "אישור הסיסמה",
-      "submit": "איפוס"
+      "password_confirmation": "אשר סיסמא",
+      "submit": "לאפס את הסיסמה"
     },
     "order": {
       "order": "הזמן",
@@ -296,87 +297,89 @@
       "view_details": "הצג את פרטי ההזמנה",
       "back": "חזרה",
       "date": "תאריך",
-      "payment_status": "סטטוס תשלום",
-      "fulfillment_status": "סטטוס ביצוע",
-      "cancelled_on": "בוטלה ב-{{date}}. הסיבה: {{reason}}",
+      "payment_status": "מצב תשלום",
+      "fulfillment_status": "מצב הזמנה",
+      "cancelled_on": " {{ date }} הזמנה בוטלה בתאריך",
       "product": "מוצר",
       "quantity": "כמות",
       "fulfillment_with_number": "ההזמנה שלך נשלחה ב-{{date}}. ניתן לעקוב אחר המשלוח באמצעות המספר {{tracking_number}}.",
       "fulfillment": "ההזמנה שלך נשלחה ב-{{date}}.",
       "track_shipment": "עקוב אחר המשלוח",
-      "subtotal": "סכום ביניים",
+      "subtotal": "סיכום ביניים",
       "discount": "הנחה",
       "shipping": "משלוח",
       "taxes_included": "כולל מס",
       "taxes_excluded": "לא כולל מס",
-      "total_duties": "עמלת מכס",
+      "total_duties": "מיסים",
       "refunded_amount": "הסכום שהוחזר",
-      "total": "סה\"כ",
+      "total": "סך הכל",
       "shipping_address": "כתובת למשלוח",
       "billing_address": "כתובת לחיוב"
     },
     "addresses": {
-      "title": "כתובות",
+      "title": "כתובתך",
       "no_addresses": "עדיין לא שמרת כל כתובת.",
-      "add_address": "הוספת כתובת",
-      "edit_address": "עריכת כתובת",
+      "add_address": "הוסף כתובת חדשה",
+      "edit_address": "ערוך כתובת",
       "save_address": "שמירת כתובת",
-      "edit": "עריכה",
-      "delete": "מחיקה",
+      "edit": "ערוך",
+      "delete": "מחק",
       "default_address": "כתובת ברירת מחדל",
       "address_title": "כתובת {{ position }}",
-      "delete_confirm": "להסיר את הכתובת? לאחר האישור, הפעולה הזאת לא ניתנת לביטול.",
+      "delete_confirm": "האם אתה בטוח שתרצה למחוק כתובת?",
       "fill_form": "נא למלא את הפרטים שלהלן:",
       "first_name": "שם פרטי",
       "last_name": "שם משפחה",
       "company": "חברה",
-      "phone": "מספר טלפון",
-      "address1": "כתובת שורה 1‏",
-      "address2": "כתובת 2‏",
-      "city": "עִיר",
+      "phone": "טלפון",
+      "address1": "כתובת ראשית",
+      "address2": "כתובת נוספת",
+      "city": "עיר",
       "zip": "מיקוד",
       "country": "מדינה",
-      "province": "פרובינציה",
-      "set_default": "הגדר ככתובת ברירת מחדל"
+      "province": "מחוז",
+      "set_default": "ערוך כברירת מחדל"
     }
   },
   "cart": {
     "general": {
-      "title": "עגלת קניות",
-      "empty": "עגלת הקניות שלך ריקה",
+      "title": "עגלת הקניות ",
+      "empty": "כל הדברים השווים מחכים לך — הסל עוד ריק!",
       "continue_shopping": "המשך בקניות",
       "weight": "משקל",
-      "subtotal": "סכום ביניים",
+      "subtotal": "סיכום ביניים",
       "total": "סה\"כ",
       "add_order_note": "הוספת הערה להזמנה",
       "edit_order_note": "עריכת הערה להזמנה",
       "order_note": "הערה להזמנה",
-      "save_note": "שמירה",
-      "note_placeholder": "איך נוכל לעזור לך?",
+      "save_note": "שמור",
+      "note_placeholder": "איך נוכל לעזור?",
       "update_cart": "עדכן עגלת קניות",
-      "view_cart": "הצג עגלת קניות",
+      "view_cart": "הצג עגלה",
       "checkout": "לתשלום",
       "we_accept": "אנחנו מקבלים",
-      "taxes_and_shipping_policy_at_checkout_html": "מסים ו<a href=\"{{ link }}\" class=\"link\">דמי משלוח<\/a> יחושבו בעת התשלום",
-      "taxes_included_but_shipping_at_checkout": "המסים הכלולים ודמי משלוח יחושבו בעת התשלום",
-      "taxes_included_and_shipping_policy_html": "המס כלול. <a href=\"{{ link }}\" class=\"link\">דמי משלוח<\/a> יחושבו בעת התשלום.",
-      "taxes_and_shipping_at_checkout": "המסים ודמי משלוח יחושבו בעת התשלום"
+      "taxes_and_shipping_policy_at_checkout_html": "מסים ומשלוח המחושבים בקופה",
+      "taxes_included_but_shipping_at_checkout": "המחיר כולל מע\"מ, מחיר המשלוח יחושב בדף התשלום",
+      "taxes_included_and_shipping_policy_html": "מסים ומשלוח המחושבים בקופה",
+      "taxes_and_shipping_at_checkout": "מסים ומשלוח המחושבים בקופה"
     },
     "order": {
       "product": "מוצר",
       "total": "סה\"כ",
       "quantity": "כמות",
       "remove": "הסרה",
-      "remove_with_title": "הסר {{ title }}"
+      "remove_with_title": "הסר {{ title }}",
+      "edit": "עריכה",
+      "edit_with_title": "ערוך {{ title }}"
     },
     "free_shipping_bar": {
-      "limit_unreached_html": "קנה בעוד {{ remaining_amount }} ותיהנה ממשלוח חינם!",
-      "limit_reached_html": "את\/ה זכאי\/ת לקבל משלוח חינם."
+      "limit_unreached_html": "קני בעוד {{ count }} ותיהני ממשלוח חינם!",
+      "limit_reached_html": "איזה כיף קיבלת משלוח חינם!"
     },
     "shipping_estimator": {
       "estimate_shipping": "שיערוך המשלוח",
       "country": "מדינה",
-      "province": "פרובינציה",
+      "province": "מחוז",
       "zip": "מיקוד",
       "estimate": "הערכה",
       "no_results": "מצטערים, אנחנו לא שולחים לכתובת שלך.",
@@ -398,17 +401,17 @@
   },
   "search": {
     "general": {
-      "title": "חיפוש",
+      "title": "חפשי",
       "terms": "תוצאות עבור \"{{ terms }}\"",
       "search_placeholder": "חפש את...",
       "products": "מוצרים",
       "suggestions": "הצעות",
       "collections": "אוספים",
       "posts": "פרסומי בלוגים",
-      "pages": "עמודים",
+      "pages": "דף",
       "clear": "ניקוי",
       "view_all_results": "הצג את כל התוצאות",
-      "no_results": "לא נמצאו תוצאות."
+      "no_results": "לא נמצאו תוצאות"
     },
     "results_count": {
       "zero": "0 תוצאות עבור \"{{ terms }}\"",
@@ -431,10 +434,10 @@
       "remaining_amount": "הסכום שנותר",
       "redeem_instructions": "השתמש בקוד הזה כדי לממש את כרטיס המתנה שלך בעת התשלום:",
       "code": "קוד כרטיס מתנה",
-      "expires_on": "תאריך תפוגה: {{ expires_on }}",
-      "expired": "תוקף כרטיס המתנה שלך פג או שהוא בוטל.",
+      "expires_on": "תוקף כרטיס המתנה שלך יפוג ב-{{ expiry }}.",
+      "expired": "תוקף כרטיס המתנה שלך פג ב-{{ expiry }}.",
       "scan": "או סרוק את קוד ה-QR הזה",
-      "add_to_apple_wallet": "הוספה ל-Apple Wallet",
+      "add_to_apple_wallet": "הוסף לארנק APPLE",
       "amount": "הסכום: {{ initial_value }}",
       "copied": "הועתק!"
     },
@@ -448,7 +451,7 @@
   },
   "password": {
     "general": {
-      "follow_us": "עקוב\/עקבי אחרינו",
+      "follow_us": "עקוב/עקבי אחרינו",
       "powered_by": "חנות זו מופעלת על-ידי",
       "store_owner": "בעל החנות?",
       "login": "כניסה"

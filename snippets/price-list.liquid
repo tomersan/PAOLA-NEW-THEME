@@ -38,7 +38,20 @@
   endcase
 -%}
 
-<price-list class="price-list {% if context == 'product' %}price-list--product{% endif %}">
+{%- liquid
+  assign price_list_on_sale = false
+  if product != blank and product.compare_at_price > product.price
+    assign price_list_on_sale = true
+  elsif variant != blank and variant.compare_at_price > variant.price
+    assign price_list_on_sale = true
+  elsif line_item != blank and line_item.original_price > line_item.final_price
+    assign price_list_on_sale = true
+  elsif line_item != blank and line_item.variant.compare_at_price > line_item.final_price
+    assign price_list_on_sale = true
+  endif
+-%}
+
+<price-list class="price-list {% if context == 'product' %}price-list--product{% endif %}{% if context == 'card' and price_list_on_sale %} price-list--card-on-sale{% endif %}">
   {%- if variant != blank -%}
     {%- comment -%}
       --------------------------------------------------------------------------------------------------------------------
@@ -72,7 +85,13 @@
       LINE ITEM CASE (used on cart, order page...)
       --------------------------------------------------------------------------------------------------------------------
     {%- endcomment -%}
-    <sale-price class="{% if line_item.original_price > line_item.final_price %}{{ on_sale_price_classes }}{% else %}{{ regular_price_classes }}{% endif %}">
+    {%- assign line_item_compare_at_price = line_item.variant.compare_at_price | at_least: line_item.original_price -%}
+    {%- assign line_item_is_on_sale = false -%}
+    {%- if line_item_compare_at_price > line_item.final_price -%}
+      {%- assign line_item_is_on_sale = true -%}
+    {%- endif -%}
+
+    <sale-price class="{% if line_item_is_on_sale %}{{ on_sale_price_classes }}{% else %}{{ regular_price_classes }}{% endif %}">
       <span class="sr-only">{{ 'product.price.sale_price' | t }}</span>
 
       {%- if settings.currency_code_enabled -%}
@@ -82,14 +101,14 @@
       {%- endif -%}
     </sale-price>
 
-    {%- if line_item.original_price > line_item.final_price -%}
+    {%- if line_item_is_on_sale -%}
       <compare-at-price class="{{ compare_at_price_classes }}">
         <span class="sr-only">{{ 'product.price.regular_price' | t }}</span>
 
         {%- if settings.currency_code_enabled -%}
-          {{- line_item.original_price | money_with_currency -}}
+          {{- line_item_compare_at_price | money_with_currency -}}
         {%- else -%}
-          {{- line_item.original_price | money -}}
+          {{- line_item_compare_at_price | money -}}
         {%- endif -%}
       </compare-at-price>
     {%- endif -%}
@@ -114,6 +133,11 @@
         assign variant_compare_at_price = variant.compare_at_price | money
       endif
     -%}
+
+    {%- if context == 'card' and variant.price < variant.compare_at_price -%}
+      {%- assign discount_percent = variant.compare_at_price | minus: variant.price | times: 100.0 | divided_by: variant.compare_at_price | round -%}
+      <span class="price-list__discount">{{ discount_percent }}%</span>
+    {%- endif -%}
 
     {%- if product.price_varies -%}
       {%- assign is_variant_on_sale = false -%}

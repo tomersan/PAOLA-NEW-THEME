@@ -72,7 +72,9 @@
   {%- if product.media.size > 0 -%}
     <div class="product-card__figure">
       {%- if show_badges -%}
-        {%- render 'product-badges', product: product, vertical: true, context: 'card' -%}
+        {%- render 'product-badges', product: product, vertical: true, context: 'card', types: 'custom, sold_out' -%}
+        {%- render 'product-card-custom-badges', product: product -%}
+        {%- render 'product-card-material-badge', product: product -%}
       {%- endif -%}
 
       <a href="{{ product_card_url }}" class="product-card__media" draggable="false" data-instant>
@@ -133,7 +135,7 @@
               <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
               <button type="submit" class="product-card__quick-add-button">
                 <span class="sr-only">{{ 'product.general.add_to_cart_button' | t }}</span>
-                {%- render 'icon' with 'plus' -%}
+                {%- render 'icon' with 'cart', width: 26 -%}
               </button>
             {%- endform -%}
           </product-form>
@@ -142,13 +144,15 @@
 
           <button type="button" aria-controls="{{ quick_buy_id }}" class="product-card__quick-add-button">
             <span class="sr-only">{{ 'product.general.choose_options' | t }}</span>
-            {%- render 'icon' with 'plus' -%}
+            {%- render 'icon' with 'cart', width: 26 -%}
           </button>
 
           <quick-buy-modal handle="{{ product.handle }}?variant={% if selected_variant %}{{ selected_variant.id }}{% else %}{{ product.selected_or_first_available_variant.id }}{% endif %}" class="quick-buy-modal modal" id="{{ quick_buy_id }}">
           </quick-buy-modal>
         {%- endif -%}
       {%- endif -%}
+
+      {%- render 'product-card-size-bar', product: product -%}
     </div>
   {%- endif -%}
 
@@ -159,38 +163,38 @@
   {%- endcomment -%}
 
   <div class="product-card__info empty:hidden">
-    {%- assign text_class = '' -%}
-
-    {%- if settings.product_card_text_font == 'heading' -%}
-      {%- assign text_class = 'h6' -%}
+    {%- if show_vendor and product.vendor != blank -%}
+      {%- capture vendor_class -%}smallcaps {% if settings.product_card_text_font == 'heading' %}heading{% endif %}{% endcapture %}
+      {%- render 'vendor' with product.vendor, class: vendor_class -%}
     {%- endif -%}
 
-    {%- if show_title or show_prices or show_vendor and product.vendor != blank -%}
-      <div class="v-stack justify-items-center gap-2">
-        {%- if show_vendor and product.vendor != blank -%}
-          {%- capture vendor_class -%}smallcaps {% if settings.product_card_text_font == 'heading' %}heading{% endif %}{% endcapture %}
-          {%- render 'vendor' with product.vendor, class: vendor_class -%}
+    {%- if show_title or show_prices -%}
+      {%- assign is_card_on_sale = false -%}
+      {%- if product.compare_at_price > product.price -%}
+        {%- assign is_card_on_sale = true -%}
+      {%- endif -%}
+
+      <div class="product-card__title-row{% if is_card_on_sale %} product-card__title-row--on-sale{% endif %}">
+        {%- if show_title -%}
+          <div class="product-card__title-stack">
+            {%- if is_card_on_sale -%}
+              <span class="product-card__sale-label">SALE</span>
+            {%- endif -%}
+            <a
+              href="{{ product_card_url }}"
+              class="product-title {% if settings.product_title_max_lines > 0 %}line-clamp{% endif %}"
+              {% if settings.product_title_max_lines > 0 %}
+                style="--line-clamp-count: {{ settings.product_title_max_lines }}"
+              {% endif %}
+              data-instant
+            >
+              {{- product.title -}}
+            </a>
+          </div>
         {%- endif -%}
 
-        {%- if show_title or show_prices -%}
-          <div class="v-stack justify-items-center gap-1">
-            {%- if show_title -%}
-              <a
-                href="{{ product_card_url }}"
-                class="product-title {% if text_class != blank %}{{ text_class }}{% endif %} {% if settings.product_title_max_lines > 0 %}line-clamp{% endif %}"
-                {% if settings.product_title_max_lines > 0 %}
-                  style="--line-clamp-count: {{ settings.product_title_max_lines }}"
-                {% endif %}
-                data-instant
-              >
-                {{- product.title -}}
-              </a>
-            {%- endif -%}
-
-            {%- if show_prices -%}
-              {%- render 'price-list', product: product, context: 'card' -%}
-            {%- endif -%}
-          </div>
+        {%- if show_prices -%}
+          {%- render 'price-list', product: product, context: 'card' -%}
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -228,27 +232,47 @@
             <p class="smallcaps text-subdued">{{- 'product.general.available_colors_count' | t: count: matched_product_option.values.size -}}</p>
 
           {%- when 'swatch' -%}
-            <fieldset class="h-stack wrap justify-center gap-1">
+            {%- assign swatch_max_visible = 3 -%}
+            {%- assign extra_swatches = matched_product_option.values.size | minus: swatch_max_visible -%}
+            {%- assign has_overflow = false -%}
+            {%- if extra_swatches > 0 -%}
+              {%- assign has_overflow = true -%}
+            {%- endif -%}
+
+            <fieldset class="product-card__swatches h-stack wrap justify-start gap-1{% if has_overflow %} has-overflow{% endif %}">
               <legend class="sr-only">{{ matched_product_option.name }}</legend>
+
+              {%- if has_overflow -%}
+                {%- capture toggle_id -%}swatch-toggle-{{ section.id }}-{{ block.id }}-{{ product.id }}-{% if selected_variant %}{{ selected_variant.id }}{% endif %}{%- endcapture -%}
+                <input type="checkbox" id="{{ toggle_id }}" class="product-card__swatch-toggle sr-only">
+              {%- endif -%}
 
               {%- capture param_name -%}swatch-{{ quick_buy_context }}-{{ section.id }}-{{ block.id }}-{{ product.id }}-{% if selected_variant %}{{ selected_variant.id }}{% endif %}-{{ matched_product_option.position }}{%- endcapture -%}
 
-              {%- liquid
-                for option_value in matched_product_option.values
-                  assign is_current_color = false
-                  if selected_color_option_value != blank and option_value.name == selected_color_option_value.name
-                    assign is_current_color = true
-                  endif
-                  render 'option-value', type: 'swatch', option_value: option_value, param_name: param_name, option_position: matched_product_option.position, output_variant_media: true, size: 'sm', selected_override: is_current_color
-                endfor
-              -%}
+              {%- for option_value in matched_product_option.values -%}
+                {%- assign is_current_color = false -%}
+                {%- if selected_color_option_value != blank and option_value.name == selected_color_option_value.name -%}
+                  {%- assign is_current_color = true -%}
+                {%- endif -%}
+
+                {%- assign extra_class = '' -%}
+                {%- if has_overflow and forloop.index > swatch_max_visible -%}
+                  {%- assign extra_class = ' product-card__swatch-item--extra' -%}
+                {%- endif -%}
+
+                <span class="product-card__swatch-item{{ extra_class }}">
+                  {%- render 'option-value', type: 'swatch', option_value: option_value, param_name: param_name, option_position: matched_product_option.position, output_variant_media: true, size: 'sm', selected_override: is_current_color -%}
+                </span>
+              {%- endfor -%}
+
+              {%- if has_overflow -%}
+                <label for="{{ toggle_id }}" class="product-card__swatch-more" aria-label="{{ 'product.general.show_more_colors' | t | default: 'Show more colors' }}">
+                  <span>+{{ extra_swatches }}</span>
+                </label>
+              {%- endif -%}
             </fieldset>
         {%- endcase -%}
       {%- endif -%}
-    {%- endif -%}
-
-    {%- if selected_color_name != blank -%}
-      <p class="smallcaps text-subdued">{{ selected_color_name }}</p>
     {%- endif -%}
 
     {%- if show_rating -%}

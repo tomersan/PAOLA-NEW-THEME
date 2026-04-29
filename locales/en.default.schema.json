@@ -810,6 +810,8 @@
     },
     "footer": {
       "name": "Footer",
+      "mobile_collapse_links": "Collapse link blocks on mobile",
+      "mobile_collapse_links_info": "On mobile, link blocks turn into expandable accordions. Other blocks (text, image, newsletter) are unchanged.",
       "show_social_media": "Show social media",
       "show_social_media_info": "Configure your social links in your [brand settings](/admin/settings/branding) or your theme social media settings.",
       "show_payment_icons": "Show payment icons",

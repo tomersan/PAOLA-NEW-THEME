@@ -52,9 +52,9 @@
   @media screen and (min-width: 1000px) {
     #shopify-section-{{ section.id }} {
       {%- if has_content_below_gallery -%}
-        --product-grid: "product-gallery product-info" auto "product-content product-info" minmax(0, 1fr) / minmax(0, {{ 100.0 | minus: product_info_size | divided_by: 100.0 }}fr) minmax(0, {{ product_info_size | divided_by: 100.0 }}fr);
+        --product-grid: "product-info product-gallery" auto "product-info product-content" minmax(0, 1fr) / minmax(0, {{ product_info_size | divided_by: 100.0 }}fr) minmax(0, {{ 100.0 | minus: product_info_size | divided_by: 100.0 }}fr);
       {%- else -%}
-        --product-grid: "product-gallery product-info" / minmax(0, {{ 100.0 | minus: product_info_size | divided_by: 100.0 }}fr) minmax(0, {{ product_info_size | divided_by: 100.0 }}fr);
+        --product-grid: "product-info product-gallery" / minmax(0, {{ product_info_size | divided_by: 100.0 }}fr) minmax(0, {{ 100.0 | minus: product_info_size | divided_by: 100.0 }}fr);
       {%- endif -%}
     }
   }
@@ -203,6 +203,33 @@
   } catch (e) {
     // Safari in private mode does not allow setting item, we silently fail
   }
+</script>
+
+<script>
+  // Move the third-party wishlist button onto the product gallery (bottom-right overlay).
+  (function () {
+    const section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section) return;
+    const gallery = section.querySelector('.product-gallery');
+    if (!gallery) return;
+
+    const moveButton = () => {
+      const btn = document.querySelector('.st-wishlist-button[data-type="details"]');
+      if (btn && btn.parentElement !== gallery) {
+        gallery.appendChild(btn);
+        return true;
+      }
+      return false;
+    };
+
+    if (moveButton()) return;
+
+    const observer = new MutationObserver(() => {
+      if (moveButton()) observer.disconnect();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    setTimeout(() => observer.disconnect(), 10000);
+  })();
 </script>
 
 {% schema %}

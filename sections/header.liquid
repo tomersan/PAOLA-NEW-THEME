@@ -57,6 +57,82 @@
     }
   {%- endif -%}
 
+  {%- if section.settings.mobile_layout == 'logo_left_icons_right' -%}
+    @media screen and (max-width: 999px) {
+      #shopify-section-{{ section.id }} {
+        --header-grid: "logo secondary-nav" / auto minmax(0, 1fr);
+      }
+
+      #shopify-section-{{ section.id }} .header {
+        direction: ltr;
+      }
+
+      #shopify-section-{{ section.id }} .header__primary-nav {
+        display: none;
+      }
+
+      #shopify-section-{{ section.id }} .header__logo {
+        justify-self: start;
+      }
+
+      #shopify-section-{{ section.id }} .header__secondary-nav {
+        justify-self: end;
+        justify-content: flex-end;
+      }
+
+      #shopify-section-{{ section.id }} .header__secondary-nav > ul {
+        direction: ltr;
+      }
+
+      :where(#shopify-section-{{ section.id }} .header__secondary-nav > ul > li) {
+        order: var(--mobile-order, 0);
+        display: flex;
+        align-items: center;
+      }
+
+      :where(#shopify-section-{{ section.id }} .header__secondary-nav > ul > li > a),
+      :where(#shopify-section-{{ section.id }} .header__secondary-nav > ul > li > button) {
+        display: inline-flex;
+        align-items: center;
+        line-height: 1;
+      }
+    }
+  {%- endif -%}
+
+  :where(#shopify-section-{{ section.id }} .header__secondary-nav > ul > li) {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  :where(#shopify-section-{{ section.id }} .header__secondary-nav > ul > li > a),
+  :where(#shopify-section-{{ section.id }} .header__secondary-nav > ul > li > button),
+  :where(#shopify-section-{{ section.id }} .header__secondary-nav > ul > li > shopify-account) {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+  }
+
+  #shopify-section-{{ section.id }} .header__cart-link > a {
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .header__cart-badge {
+    background-color: {{ section.settings.cart_badge_background }};
+    color: {{ section.settings.cart_badge_text_color }};
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    font-size: 14px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    right: -20px;
+  }
+
   {%- if section.settings.enable_liquid_glass -%}
     #shopify-section-{{ section.id }} .header {
       --liquid-glass-color: {{ section.settings.liquid_glass_color.rgb }};
@@ -131,9 +207,7 @@
         <button
           type="button"
           aria-controls="sidebar-menu"
-          {% unless section.settings.layout == 'drawer' %}
-            class="md:hidden"
-          {% endunless %}
+          class="{% unless section.settings.layout == 'drawer' %}md:hidden {% endunless %}{% if section.settings.mobile_layout == 'logo_left_icons_right' %}md-max:hidden{% endif %}"
         >
           <span class="sr-only">{{ 'header.general.menu' | t }}</span>
           {%- render 'icon' with 'hamburger', class: 'header__nav-icon' -%}
@@ -277,8 +351,23 @@
           {%- endif -%}
         {%- endfor -%}
 
+        {%- liquid
+          assign has_any_menu = false
+          if menu.links.size > 0 or sidebar_menu.links.size > 0
+            assign has_any_menu = true
+          endif
+        -%}
+        {%- if section.settings.mobile_layout == 'logo_left_icons_right' and has_any_menu -%}
+          <li class="header__menu-trigger md:hidden" style="--mobile-order: {{ section.settings.mobile_order_menu }};">
+            <button type="button" aria-controls="sidebar-menu">
+              <span class="sr-only">{{ 'header.general.menu' | t }}</span>
+              {%- render 'icon' with 'hamburger', class: 'header__nav-icon' -%}
+            </button>
+          </li>
+        {%- endif -%}
+
         {%- if shop.customer_accounts_enabled -%}
-          <li class="header__account-link sm-max:hidden">
+          <li class="header__account-link sm-max:hidden" style="--mobile-order: {{ section.settings.mobile_order_account }};">
             <shopify-account menu="{{ section.settings.customer_account_menu }}">
               <div slot="signed-out-avatar">
                 {%- if section.settings.show_icons -%}
@@ -296,7 +385,7 @@
         {%- endif -%}
 
         {%- if section.settings.enable_search -%}
-          <li class="header__search-link">
+          <li class="header__search-link" style="--mobile-order: {{ section.settings.mobile_order_search }};">
             <a href="{{ routes.search_url }}" aria-controls="header-search-{{ section.id }}">
               <span class="sr-only">{{ 'header.general.search' | t }}</span>
 
@@ -312,7 +401,11 @@
           </li>
         {%- endif -%}
 
-        <li class="relative header__cart-link">
+        <li class="header__wishlist-link" style="--mobile-order: {{ section.settings.mobile_order_wishlist }};">
+          <button class="st-wishlist-details-button st-wishlist-details-button--header-icon" data-type="manually" title="Open Wishlist Details" aria-label="Open Wishlist Details"></button>
+        </li>
+
+        <li class="relative header__cart-link" style="--mobile-order: {{ section.settings.mobile_order_cart }};">
           <a
             href="{{ routes.cart_url }}"
             {% if settings.cart_type != 'page' and request.page_type != 'cart' %}
@@ -331,7 +424,9 @@
               >
             {%- endif -%}
 
-            <cart-dot class="header__cart-dot {% unless cart.empty? %}is-visible{% endunless %} {% unless section.settings.show_icons %}md:hidden{% endunless %}"></cart-dot>
+            <span class="header__cart-badge {% unless section.settings.show_icons %}md:hidden{% endunless %}" aria-hidden="true">
+              <cart-count>{{ cart.item_count }}</cart-count>
+            </span>
           </a>
         </li>
       </ul>
@@ -560,6 +655,100 @@
       "id": "show_icons",
       "label": "t:sections.header.show_icons",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Cart badge"
+    },
+    {
+      "type": "paragraph",
+      "content": "Number badge on the cart icon. Shows the item count and is always visible (even when the cart is empty)."
+    },
+    {
+      "type": "color",
+      "id": "cart_badge_background",
+      "label": "Background color",
+      "default": "#e1baae"
+    },
+    {
+      "type": "color",
+      "id": "cart_badge_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Mobile header"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default (menu left, logo center, icons right)"
+        },
+        {
+          "value": "logo_left_icons_right",
+          "label": "Logo left, icons right"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "paragraph",
+      "content": "Set the position of each icon (1 is leftmost). Lower numbers appear first."
+    },
+    {
+      "type": "range",
+      "id": "mobile_order_search",
+      "label": "Search position",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 1,
+      "visible_if": "{{ section.settings.mobile_layout == 'logo_left_icons_right' }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_order_account",
+      "label": "Account position",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 2,
+      "visible_if": "{{ section.settings.mobile_layout == 'logo_left_icons_right' }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_order_wishlist",
+      "label": "Wishlist position",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 3,
+      "visible_if": "{{ section.settings.mobile_layout == 'logo_left_icons_right' }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_order_cart",
+      "label": "Cart position",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "visible_if": "{{ section.settings.mobile_layout == 'logo_left_icons_right' }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_order_menu",
+      "label": "Menu position",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 5,
+      "visible_if": "{{ section.settings.mobile_layout == 'logo_left_icons_right' }}"
     },
     {
       "type": "header",

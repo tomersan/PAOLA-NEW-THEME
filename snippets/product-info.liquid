@@ -93,6 +93,12 @@
         elsif block.type == 'feature_with_icon' and next_block.type == 'feature_with_icon'
           assign block_group_class = 'feature-badge-list'
           assign block_group_name = 'feature-badge-list'
+        elsif block.type == 'title' and next_block.type == 'price' and next_block.settings.show_taxes_notice == false and request.page_type == 'product' and context == 'main_product'
+          assign block_group_class = 'product-info__title-row product-card__title-row'
+          if product.compare_at_price > product.price
+            assign block_group_class = block_group_class | append: ' product-card__title-row--on-sale'
+          endif
+          assign block_group_name = 'product-info__title-row'
         else
           assign allow_block_group = false
           assign block_group_class = ''
@@ -131,9 +137,21 @@
             {%- endif -%}
 
             {%- if request.page_type == 'product' and context == 'main_product' -%}
-              <h1 class="product-title {{ block.settings.heading_tag }}">
-                {{- product_title -}}
-              </h1>
+              {%- assign title_variant = product.selected_or_first_available_variant -%}
+              {%- assign title_is_on_sale = false -%}
+              {%- if title_variant.compare_at_price > title_variant.price -%}
+                {%- assign title_is_on_sale = true -%}
+              {%- endif -%}
+
+              <div class="product-card__title-stack">
+                <h1 class="product-title {{ block.settings.heading_tag }}">
+                  {{- product_title -}}
+                </h1>
+                {%- if title_is_on_sale -%}
+                  {%- assign title_discount_percent = title_variant.compare_at_price | minus: title_variant.price | times: 100.0 | divided_by: title_variant.compare_at_price | round -%}
+                  <span class="price-list__discount product-info__title-discount">{{ title_discount_percent }}%</span>
+                {%- endif -%}
+              </div>
             {%- else -%}
               <h2 class="product-title {{ block.settings.heading_tag }}">
                 <a href="{{ product.url }}">{{ product_title }}</a>

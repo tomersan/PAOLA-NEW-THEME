@@ -72,10 +72,19 @@
         endif
       %}
 
+      {%- liquid
+        assign option_display_name = option.name
+        if color_label_list contains option_downcase
+          assign option_display_name = 'general.label.color' | t | split: ',' | first
+        elsif size_label_list contains option_downcase
+          assign option_display_name = 'general.label.size' | t | split: ',' | first
+        endif
+      -%}
+
       <fieldset class="variant-picker__option v-stack gap-2">
         <div class="variant-picker__option-info h-stack justify-between gap-2">
           <div class="h-stack gap-1">
-            <legend>{{ option.name }}:</legend>
+            <legend>{{ option_display_name }}:</legend>
 
             {%- if resolved_option_selector_style == 'swatch' or resolved_option_selector_style == 'swatch_underline' or resolved_option_selector_style == 'variant_image' -%}
               <span>{{ option.selected_value }}</span>
@@ -111,7 +120,7 @@
             </button>
 
             <x-popover id="{{ popover_id }}" class="popover popover--bottom-start color-scheme color-scheme--dialog" close-on-listbox-change>
-              <p class="h5" slot="header">{{ option.name }}</p>
+              <p class="h5" slot="header">{{ option_display_name }}</p>
 
               <div class="popover__value-list">
                 {%- assign param_name = form_id | append: '-option' | append: option.position -%}

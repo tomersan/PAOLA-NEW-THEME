@@ -1,0 +1,68 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------------------------------------------------
+  PRODUCT CARD SIZE BAR COMPONENT
+  ----------------------------------------------------------------------------------------------------------------------
+
+  Renders a vertical size bar overlay on a product card image. Detects the product's size option (by translated label,
+  English "size", or Hebrew "מידה") and renders all size values with up/down chevrons that scroll the list when there
+  are more than 3 sizes. Out-of-stock sizes get a strikethrough.
+
+  ********************************************
+  Supported variables
+  ********************************************
+
+  * product: the product whose sizes should be rendered
+{%- endcomment -%}
+
+{%- liquid
+  assign size_option = null
+  assign size_label_list = 'general.label.size' | t | append: ',size,מידה' | replace: ', ', ',' | downcase | split: ','
+
+  for size_label in size_label_list
+    assign size_label_trimmed = size_label | strip
+    if product.options_by_name[size_label_trimmed] != blank
+      assign size_option = product.options_by_name[size_label_trimmed]
+      break
+    endif
+  endfor
+
+  if size_option == blank
+    for product_option in product.options_with_values
+      assign option_name_clean = product_option.name | downcase | strip | replace: ':', '' | strip
+      if option_name_clean contains 'size' or option_name_clean contains 'מידה'
+        assign size_option = product_option
+        break
+      endif
+    endfor
+  endif
+-%}
+
+{%- if size_option != blank and size_option.values.size > 0 -%}
+  {%- assign size_position_index = size_option.position | minus: 1 -%}
+  <product-card-size-bar class="product-card__size-bar" data-visible-count="3">
+    <button type="button" class="product-card__size-arrow product-card__size-arrow--up" aria-label="{{ 'general.accessibility.previous' | t | default: 'Previous' }}" data-size-arrow="up" tabindex="-1" hidden>
+      <svg aria-hidden="true" focusable="false" fill="none" viewBox="0 0 12 12" class="icon">
+        <path d="M6 11V2M2.5 5.5 6 2l3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="product-card__size-viewport" data-size-viewport>
+      <ul class="product-card__size-list" data-size-list role="list">
+        {%- for value in size_option.values -%}
+          {%- assign is_available = false -%}
+          {%- for variant in product.variants -%}
+            {%- if variant.options[size_position_index] == value.name and variant.available -%}
+              {%- assign is_available = true -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+          <li class="product-card__size-item{% unless is_available %} product-card__size-item--unavailable{% endunless %}">
+            <span>{{ value.name }}</span>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+    <button type="button" class="product-card__size-arrow product-card__size-arrow--down" aria-label="{{ 'general.accessibility.next' | t | default: 'Next' }}" data-size-arrow="down" tabindex="-1"{% if size_option.values.size <= 3 %} hidden{% endif %}>
+      {%- render 'icon' with 'chevron-down' -%}
+    </button>
+  </product-card-size-bar>
+{%- endif -%}

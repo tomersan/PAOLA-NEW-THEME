@@ -4,9 +4,58 @@
   }
 </style>
 
+{%- if section.settings.mobile_collapse_links -%}
+  <script>
+    if (!window.customElements.get('footer-collapsible')) {
+      window.customElements.define('footer-collapsible', class extends HTMLElement {
+        connectedCallback() {
+          this.detailsEl = this.querySelector('details');
+          this.summaryEl = this.querySelector('summary');
+          if (!this.detailsEl || !this.summaryEl) return;
+
+          this.mediaQuery = window.matchMedia('(min-width: 700px)');
+          this._wasDesktop = false;
+
+          this._handleSummaryClick = (event) => {
+            if (this.mediaQuery.matches) event.preventDefault();
+          };
+          this._handleToggle = () => {
+            this.detailsEl.setAttribute('aria-expanded', this.detailsEl.open ? 'true' : 'false');
+          };
+          this._handleViewportChange = () => this._sync();
+
+          this.summaryEl.addEventListener('click', this._handleSummaryClick);
+          this.detailsEl.addEventListener('toggle', this._handleToggle);
+          this.mediaQuery.addEventListener('change', this._handleViewportChange);
+
+          this._sync();
+        }
+
+        disconnectedCallback() {
+          this.summaryEl?.removeEventListener('click', this._handleSummaryClick);
+          this.detailsEl?.removeEventListener('toggle', this._handleToggle);
+          this.mediaQuery?.removeEventListener('change', this._handleViewportChange);
+        }
+
+        _sync() {
+          if (this.mediaQuery.matches) {
+            this.detailsEl.open = true;
+            this.detailsEl.setAttribute('aria-expanded', 'true');
+            this._wasDesktop = true;
+          } else if (this._wasDesktop) {
+            this.detailsEl.open = false;
+            this.detailsEl.setAttribute('aria-expanded', 'false');
+            this._wasDesktop = false;
+          }
+        }
+      });
+    }
+  </script>
+{%- endif -%}
+
 {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
 
-<div class="footer color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+<div class="footer color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %} {% if section.settings.mobile_collapse_links %}footer--mobile-collapse{% endif %}">
   <div class="container">
     <div class="footer__inner">
       {%- comment -%}
@@ -63,19 +112,43 @@
                   {%- assign menu = block.settings.menu -%}
 
                   {%- if menu != blank and menu.links.size > 0 -%}
-                    <div class="v-stack gap-4 sm:gap-5">
-                      {%- if block.settings.show_menu_title != blank -%}
-                        <p class="h6">{{ block.settings.menu_title | default: menu.title }}</p>
-                      {%- endif -%}
+                    {%- if section.settings.mobile_collapse_links -%}
+                      {%- assign menu_label = block.settings.menu_title | default: menu.title -%}
+                      <footer-collapsible class="footer-collapsible">
+                        <details class="footer-collapsible__details group">
+                          <summary class="footer-collapsible__summary">
+                            <span class="accordion__toggle h6">
+                              <span>{{ menu_label }}</span>
+                              <span class="animated-plus group-expanded:rotate footer-collapsible__indicator" aria-hidden="true"></span>
+                            </span>
+                          </summary>
 
-                      <ul class="v-stack gap-2.5 unstyled-list" role="list">
-                        {%- for link in menu.links -%}
-                          <li>
-                            <a href="{{ link.url }}" class="link-faded">{{ link.title }}</a>
-                          </li>
-                        {%- endfor -%}
-                      </ul>
-                    </div>
+                          <div class="footer-collapsible__content">
+                            <ul class="v-stack gap-2.5 unstyled-list" role="list">
+                              {%- for link in menu.links -%}
+                                <li>
+                                  <a href="{{ link.url }}" class="link-faded">{{ link.title }}</a>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          </div>
+                        </details>
+                      </footer-collapsible>
+                    {%- else -%}
+                      <div class="v-stack gap-4 sm:gap-5">
+                        {%- if block.settings.show_menu_title != blank -%}
+                          <p class="h6">{{ block.settings.menu_title | default: menu.title }}</p>
+                        {%- endif -%}
+
+                        <ul class="v-stack gap-2.5 unstyled-list" role="list">
+                          {%- for link in menu.links -%}
+                            <li>
+                              <a href="{{ link.url }}" class="link-faded">{{ link.title }}</a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      </div>
+                    {%- endif -%}
                   {%- endif -%}
 
                 {%- when 'newsletter' -%}
@@ -203,6 +276,13 @@
       "type": "checkbox",
       "id": "separate_section_with_border",
       "label": "t:global.section.separate_section_with_border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_collapse_links",
+      "label": "t:sections.footer.mobile_collapse_links",
+      "info": "t:sections.footer.mobile_collapse_links_info",
       "default": false
     },
     {

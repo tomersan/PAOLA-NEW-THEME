@@ -1205,4 +1205,15 @@
     <svg role="presentation" width="{{ width | default: 18 }}" viewBox="0 0 18 18" fill="none">
       <path fill="currentColor" d="M0 0h18v2H0zm0 4h18v2H0zm0 4h18v2H0zm0 4h18v2H0zm0 4h18v2H0z"/>
     </svg>
+
+  {%- when 'trash' -%}
+    <svg aria-hidden="true" focusable="false" fill="none" width="{{ width | default: 16 }}" class="{{ class | strip }}" viewBox="0 0 16 16">
+      <path d="M2.5 4h11M6.5 7v5M9.5 7v5M3.5 4l.7 9.1A1.5 1.5 0 0 0 5.7 14.5h4.6a1.5 1.5 0 0 0 1.5-1.4L12.5 4M6 4V2.5A1 1 0 0 1 7 1.5h2a1 1 0 0 1 1 1V4" stroke="currentColor" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+
+  {%- when 'pencil' -%}
+    <svg aria-hidden="true" focusable="false" fill="none" width="{{ width | default: 16 }}" class="{{ class | strip }}" viewBox="0 0 16 16">
+      <path d="M11.5 1.7a1.7 1.7 0 0 1 2.4 2.4L5 13l-3.5.5L2 10l9.5-8.3Z" stroke="currentColor" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="m10 3 3 3" stroke="currentColor" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
 {%- endcase -%}

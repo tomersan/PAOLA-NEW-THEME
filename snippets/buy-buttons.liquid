@@ -103,6 +103,29 @@
             stretch: true
           -%}
 
+          {%- liquid
+            assign show_free_shipping_message = false
+
+            if settings.cart_show_free_shipping_bar
+              assign free_shipping_threshold_string = settings.cart_free_shipping_threshold | strip
+
+              if free_shipping_threshold_string != blank and free_shipping_threshold_string != '0'
+                assign free_shipping_threshold_cents = free_shipping_threshold_string | times: 100
+                assign current_variant_price = product.selected_or_first_available_variant.price | default: 0
+
+                if button_disabled == false and current_variant_price >= free_shipping_threshold_cents
+                  assign show_free_shipping_message = true
+                endif
+              endif
+            endif
+          -%}
+
+          {%- if show_free_shipping_message -%}
+            <p class="buy-buttons__free-shipping">
+              {{- 'product.general.free_shipping_eligible' | t -}}
+            </p>
+          {%- endif -%}
+
           {%- if show_payment_button -%}
             {{- form | payment_button -}}
 

@@ -85,6 +85,7 @@
       "description": "Description",
       "view_details": "View details",
       "add_to_cart_button": "Add to cart",
+      "free_shipping_eligible": "Free shipping with this item",
       "pre_order_button": "Pre-order",
       "sold_out_button": "Sold out",
       "unavailable_button": "Unavailable",
@@ -365,7 +366,9 @@
       "total": "Total",
       "quantity": "Quantity",
       "remove": "Remove",
-      "remove_with_title": "Remove {{ title }}"
+      "remove_with_title": "Remove {{ title }}",
+      "edit": "Edit",
+      "edit_with_title": "Edit {{ title }}"
     },
     "free_shipping_bar": {
       "limit_unreached_html": "Spend {{ remaining_amount }} more and get free shipping!",

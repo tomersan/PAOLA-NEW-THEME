@@ -1541,12 +1541,30 @@ _currencyFormatter = new WeakMap();
 _threshold = new WeakMap();
 _FreeShippingBar_instances = new WeakSet();
 updateMessage_fn = function() {
-  const messageElement = this.querySelector("span");
-  if (this.totalPrice >= __privateGet(this, _threshold)) {
+  const messageElement = this.querySelector(".free-shipping-bar__message") || this.querySelector("span");
+  const fillElement = this.querySelector(".free-shipping-bar__fill");
+  const threshold = __privateGet(this, _threshold);
+  const totalPrice = this.totalPrice;
+  const reached = totalPrice >= threshold;
+  const wasReached = this.hasAttribute("data-reached");
+  if (reached) {
     messageElement.innerHTML = this.getAttribute("reached-message");
+    if (fillElement) fillElement.style.width = "100%";
+    this.setAttribute("data-reached", "");
+    if (!wasReached) {
+      this.classList.remove("free-shipping-bar--celebrate");
+      void this.offsetWidth;
+      this.classList.add("free-shipping-bar--celebrate");
+      window.setTimeout(() => this.classList.remove("free-shipping-bar--celebrate"), 1800);
+    }
   } else {
-    const replacement = `${__privateGet(this, _currencyFormatter).format((__privateGet(this, _threshold) - this.totalPrice) / 100).replace(/\$/g, "$$$$")}`;
+    const replacement = `${__privateGet(this, _currencyFormatter).format((threshold - totalPrice) / 100).replace(/\$/g, "$$$$")}`;
     messageElement.innerHTML = this.getAttribute("unreached-message").replace(new RegExp("({{.*}})", "g"), replacement);
+    if (fillElement) {
+      const percent = threshold > 0 ? Math.max(0, Math.min(100, totalPrice / threshold * 100)) : 0;
+      fillElement.style.width = percent + "%";
+    }
+    this.removeAttribute("data-reached");
   }
 };
 onCartChanged_fn = function(event) {
@@ -2841,6 +2859,58 @@ if (!window.customElements.get("product-card")) {
   window.customElements.define("product-card", ProductCard);
 }
 
+// js/common/product/product-card-size-bar.js
+var ProductCardSizeBar = class extends HTMLElement {
+  connectedCallback() {
+    this.viewport = this.querySelector("[data-size-viewport]");
+    this.list = this.querySelector("[data-size-list]");
+    this.upArrow = this.querySelector('[data-size-arrow="up"]');
+    this.downArrow = this.querySelector('[data-size-arrow="down"]');
+    if (!this.viewport || !this.list || !this.upArrow || !this.downArrow) {
+      return;
+    }
+    this._onScroll = this._updateArrows.bind(this);
+    this._onUp = (e) => { e.preventDefault(); this._scrollBy(-1); };
+    this._onDown = (e) => { e.preventDefault(); this._scrollBy(1); };
+    this.viewport.addEventListener("scroll", this._onScroll, { passive: true });
+    this.upArrow.addEventListener("click", this._onUp);
+    this.downArrow.addEventListener("click", this._onDown);
+    this._resizeObserver = new ResizeObserver(() => this._updateArrows());
+    this._resizeObserver.observe(this.viewport);
+    this._updateArrows();
+  }
+  disconnectedCallback() {
+    if (this.viewport) this.viewport.removeEventListener("scroll", this._onScroll);
+    if (this.upArrow) this.upArrow.removeEventListener("click", this._onUp);
+    if (this.downArrow) this.downArrow.removeEventListener("click", this._onDown);
+    if (this._resizeObserver) this._resizeObserver.disconnect();
+  }
+  _getItemHeight() {
+    const firstItem = this.list.querySelector(".product-card__size-item");
+    if (firstItem) {
+      const h = firstItem.getBoundingClientRect().height;
+      if (h > 0) return h;
+    }
+    return 30;
+  }
+  _scrollBy(direction) {
+    if (!this.viewport) return;
+    this.viewport.scrollBy({ top: this._getItemHeight() * direction, behavior: "smooth" });
+  }
+  _updateArrows() {
+    if (!this.viewport || this.viewport.clientHeight === 0) return;
+    const scrollTop = this.viewport.scrollTop;
+    const maxScroll = this.viewport.scrollHeight - this.viewport.clientHeight;
+    const canScrollUp = scrollTop > 1;
+    const canScrollDown = maxScroll > 0 && scrollTop < maxScroll - 1;
+    this.upArrow.hidden = !canScrollUp;
+    this.downArrow.hidden = !canScrollDown;
+  }
+};
+if (!window.customElements.get("product-card-size-bar")) {
+  window.customElements.define("product-card-size-bar", ProductCardSizeBar);
+}
+
 // js/common/product/product-form.js
 var _abortController7, _ProductForm_instances, form_get2, onSubmit_fn;
 var ProductForm = class extends HTMLElement {
@@ -3343,6 +3413,10 @@ var ProductList = class extends HTMLElement {
         inView6(this, this.reveal.bind(this));
       }
     }
+    this._initSizeBarRowTracking();
+  }
+  disconnectedCallback() {
+    this._teardownSizeBarRowTracking();
   }
   reveal() {
     const revealElements = this.querySelectorAll('product-card[reveal-on-scroll="true"], .product-list__promo[reveal-on-scroll="true"]');
@@ -3359,6 +3433,77 @@ var ProductList = class extends HTMLElement {
         delay: stagger(0.05, { start: 0.4, easing: "ease-out" })
       }
     );
+  }
+  _initSizeBarRowTracking() {
+    if (!this.hasAttribute("collection-desktop-layout")) return;
+    this._sizeBarSchedule = this._sizeBarSchedule.bind(this);
+    this._sizeBarUpdate = this._sizeBarUpdate.bind(this);
+    this._sizeBarFrame = null;
+    window.addEventListener("scroll", this._sizeBarSchedule, { passive: true });
+    window.addEventListener("resize", this._sizeBarSchedule);
+    this._sizeBarMutationObserver = new MutationObserver(this._sizeBarSchedule);
+    this._sizeBarMutationObserver.observe(this, { childList: true });
+    this._sizeBarSchedule();
+  }
+  _teardownSizeBarRowTracking() {
+    if (!this._sizeBarSchedule) return;
+    window.removeEventListener("scroll", this._sizeBarSchedule);
+    window.removeEventListener("resize", this._sizeBarSchedule);
+    if (this._sizeBarFrame) {
+      cancelAnimationFrame(this._sizeBarFrame);
+      this._sizeBarFrame = null;
+    }
+    if (this._sizeBarMutationObserver) {
+      this._sizeBarMutationObserver.disconnect();
+      this._sizeBarMutationObserver = null;
+    }
+  }
+  _sizeBarSchedule() {
+    if (this._sizeBarFrame) return;
+    this._sizeBarFrame = requestAnimationFrame(() => {
+      this._sizeBarFrame = null;
+      this._sizeBarUpdate();
+    });
+  }
+  _sizeBarAnchorY() {
+    const header = document.querySelector("header.shopify-section--header, .shopify-section--header, store-header, header");
+    let headerBottom = 0;
+    if (header) {
+      const rect = header.getBoundingClientRect();
+      if (rect.bottom > 0) headerBottom = rect.bottom;
+    }
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    return Math.max(headerBottom + 20, vh * 0.65);
+  }
+  _sizeBarUpdate() {
+    const cards = Array.from(this.querySelectorAll(".product-card"));
+    if (cards.length === 0) return;
+    const tolerance = 5;
+    const rows = [];
+    for (const card of cards) {
+      const rect = card.getBoundingClientRect();
+      let row = rows.find((r) => Math.abs(r.top - rect.top) < tolerance);
+      if (!row) {
+        row = { top: rect.top, bottom: rect.bottom, cards: [] };
+        rows.push(row);
+      } else {
+        row.bottom = Math.max(row.bottom, rect.bottom);
+      }
+      row.cards.push(card);
+    }
+    rows.sort((a, b) => a.top - b.top);
+    const anchorY = this._sizeBarAnchorY();
+    let activeRow = null;
+    for (const row of rows) {
+      if (row.bottom > anchorY) {
+        activeRow = row;
+        break;
+      }
+    }
+    const activeSet = new Set(activeRow ? activeRow.cards : []);
+    for (const card of cards) {
+      card.classList.toggle("product-card--top-row", activeSet.has(card));
+    }
   }
 };
 if (!window.customElements.get("product-list")) {
@@ -3616,18 +3761,9 @@ onOptionPreload_fn = function(event, target) {
  * so that switching variants is nearly instant
  */
 onIntersection_fn = function(entries) {
-  const prerenderOptions = () => {
-    Array.from(__privateGet(this, _form).elements).filter((item) => item.matches("input[data-option-position]:not(:checked)")).forEach((input) => {
-      __privateMethod(this, _VariantPicker_instances, renderForCombination_fn).call(this, __privateMethod(this, _VariantPicker_instances, getOptionValuesFromOption_fn).call(this, input));
-    });
-  };
-  if (entries[0].isIntersecting) {
-    if (window.requestIdleCallback) {
-      window.requestIdleCallback(prerenderOptions, { timeout: 2e3 });
-    } else {
-      prerenderOptions();
-    }
-  }
+  // Variant-picker prefetch disabled: was firing one /products/<handle>?option_values=... fetch
+  // per non-selected variant on viewport intersection, which hit storefront rate limits.
+  return;
 };
 renderForCombination_fn = async function(optionValues) {
   const optionValuesAsString = optionValues.join(",");

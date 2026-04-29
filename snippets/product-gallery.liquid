@@ -112,6 +112,11 @@
     </open-lightbox-button>
   {%- endif -%}
 
+  {%- if product != blank -%}
+    {%- render 'product-card-custom-badges', product: product -%}
+    {%- render 'product-card-material-badge', product: product -%}
+  {%- endif -%}
+
   <div class="product-gallery__image-list">
     {%- comment -%}
       ----------------------------------------------------------------------------------------------------------------------

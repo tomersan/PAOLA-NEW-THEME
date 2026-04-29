@@ -85,9 +85,36 @@
         <line-item-quantity class="h-stack gap-4 {% if request.page_type == 'cart' %}sm:hidden{% endif %}">
           {%- render 'quantity-selector', line_item: line_item, size: 'sm' -%}
 
-          <a href="{{ line_item.url_to_remove }}" class="link text-xs" aria-label="{{ 'cart.order.remove_with_title' | t: title: line_item.title | escape }}">
-            {{- 'cart.order.remove' | t -}}
-          </a>
+          <div class="line-item__actions h-stack gap-2">
+            {%- if line_item.product.handle != blank and line_item.product.has_only_default_variant == false -%}
+              {%- capture line_item_edit_id -%}line-item-edit-{{ line_item.key | replace: ':', '-' | replace: '?', '-' }}{%- endcapture -%}
+
+              <button
+                type="button"
+                aria-controls="{{ line_item_edit_id }}"
+                class="line-item__action-button"
+                aria-label="{{ 'cart.order.edit_with_title' | t: title: line_item.title | escape }}"
+              >
+                {%- render 'icon' with 'pencil', width: 16 -%}
+              </button>
+
+              <line-item-edit-modal
+                id="{{ line_item_edit_id }}"
+                handle="{{ line_item.product.handle }}?variant={{ line_item.variant.id }}"
+                line-key="{{ line_item.key }}"
+                line-quantity="{{ line_item.quantity }}"
+                class="quick-buy-modal modal"
+              ></line-item-edit-modal>
+            {%- endif -%}
+
+            <a
+              href="{{ line_item.url_to_remove }}"
+              class="line-item__action-button"
+              aria-label="{{ 'cart.order.remove_with_title' | t: title: line_item.title | escape }}"
+            >
+              {%- render 'icon' with 'trash', width: 16 -%}
+            </a>
+          </div>
         </line-item-quantity>
       {%- else -%}
         <p class="text-subdued text-sm sm:hidden">{{ 'customer.order.quantity' | t }}: {{ line_item.quantity }}</p>

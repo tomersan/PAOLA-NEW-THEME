@@ -11,30 +11,63 @@
   "type": "header",
   "name": "Header group",
   "sections": {
-    "countdown-timer": {
-      "type": "countdown-condensed",
+    "announcement_bar_bCcxjx": {
+      "type": "announcement-bar",
+      "blocks": {
+        "message_PqdyRP": {
+          "type": "message",
+          "settings": {
+            "text": "משלוח חינם! ברכישה מעל 249 ש''ח"
+          }
+        }
+      },
+      "block_order": [
+        "message_PqdyRP"
+      ],
+      "name": "t:sections.announcement_bar.name",
       "settings": {
-        "color_scheme": "schema-3",
-        "content": "super Sale Up to 40% off",
-        "link_text": "shop now",
-        "link_url": "shopify://collections/all",
-        "expiration_date": "2025-11-25",
-        "expiration_behavior": "leave",
-        "desktop_justification": "space-between"
+        "color_scheme": "",
+        "enable_sticky": false,
+        "autoplay": true,
+        "cycle_speed": 5,
+        "desktop_font_size": 14,
+        "mobile_font_size": 12
       }
     },
     "header": {
       "type": "header",
+      "blocks": {
+        "colored_menu_item_UzmJbe": {
+          "type": "colored_menu_item",
+          "settings": {
+            "menu_item": "last chance",
+            "color": "#91201b"
+          }
+        },
+        "colored_menu_item_amz9mf": {
+          "type": "colored_menu_item",
+          "settings": {
+            "menu_item": "FINAL SALE",
+            "color": "#e63946"
+          }
+        }
+      },
+      "block_order": [
+        "colored_menu_item_UzmJbe",
+        "colored_menu_item_amz9mf"
+      ],
       "settings": {
         "color_scheme": "schema-2",
         "enable_sticky": true,
         "hide_on_scroll": false,
         "show_separation_border": true,
         "reduce_padding": false,
-        "logo": "{{shop.brand.logo}}",
-        "logo_max_width": 130,
-        "logo_mobile_max_width": 80,
-        "menu": "main-menu",
+        "logo": "shopify://shop_images/PAOLA_LOGO_1_1_-1_240x_2x__2_-removebg-preview.avif",
+        "logo_max_width": 160,
+        "logo_mobile_max_width": 130,
+        "menu": "new-small-menu",
+        "sidebar_menu": "",
+        "customer_account_menu": "customer-account-main-menu",
         "menu_open_trigger": "hover",
         "menu_text_font": "heading",
         "enable_search": true,
@@ -42,18 +75,29 @@
         "sidebar_text_font": "heading",
         "sidebar_show_dividers": false,
         "sidebar_open_second_level_menus": false,
-        "layout": "logo_center_navigation_inline",
+        "layout": "logo_center_navigation_below",
         "show_icons": true,
+        "mobile_layout": "logo_left_icons_right",
+        "mobile_order_search": 5,
+        "mobile_order_account": 4,
+        "mobile_order_wishlist": 3,
+        "mobile_order_cart": 2,
+        "mobile_order_menu": 1,
         "show_country_selector": true,
         "show_country_name": false,
         "show_country_flag": true,
         "show_locale_selector": false,
-        "transparent_header_text_color": "#ffffff"
+        "enable_liquid_glass": true,
+        "liquid_glass_color": "#ffffff",
+        "liquid_glass_opacity": 60,
+        "liquid_glass_blur": 20,
+        "liquid_glass_saturation": 180,
+        "transparent_header_text_color": "#1c1c1c"
       }
     }
   },
   "order": [
-    "countdown-timer",
+    "announcement_bar_bCcxjx",
     "header"
   ]
 }

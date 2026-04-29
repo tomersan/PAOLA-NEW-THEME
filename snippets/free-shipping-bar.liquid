@@ -27,7 +27,7 @@
   assign calculated_total_price = calculated_total_price | minus: total_cart_discount
 -%}
 
-{%- if cart.requires_shipping -%}
+{%- if cart.empty? or cart.requires_shipping -%}
   <free-shipping-bar
     class="free-shipping-bar"
     threshold="{{ settings.cart_free_shipping_threshold }}"
@@ -35,7 +35,13 @@
     reached-message="{{ 'cart.free_shipping_bar.limit_reached_html' | t | escape }}"
     unreached-message="{{ 'cart.free_shipping_bar.limit_unreached_html' | t | escape }}"
   >
-    {%- comment -%}The span below is the placeholder where the content will be inserted in JS{%- endcomment -%}
-    <span class="text-subdued">&nbsp;</span>
+    {%- comment -%}The span below is the placeholder where the message will be inserted in JS{%- endcomment -%}
+    <span class="free-shipping-bar__message">&nbsp;</span>
+    <div class="free-shipping-bar__track" aria-hidden="true">
+      <div class="free-shipping-bar__fill"></div>
+      <div class="free-shipping-bar__sparkles">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
   </free-shipping-bar>
 {%- endif -%}

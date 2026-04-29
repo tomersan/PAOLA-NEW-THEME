@@ -58,6 +58,7 @@
 
     <script type="module" src="{{ 'vendor.min.js' | asset_url }}"></script>
     <script type="module" src="{{ 'theme.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'cart-edit.js' | asset_url }}"></script>
 
     {{ content_for_header }}
 
@@ -116,6 +117,7 @@
       {%- if request.page_type != 'password' -%}
         {%- sections 'footer-group' -%}
       {%- endif -%}
-    </main>
+    </main>  
+    <script src="https://negishot.co.il/cdn/widget.php?code=NGS_B8BCA618C833" defer></script>
   </body>
 </html>

@@ -1,0 +1,42 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------------------------------------------------
+  PRODUCT CARD CUSTOM BADGES COMPONENT
+  ----------------------------------------------------------------------------------------------------------------------
+
+  Renders up to three custom badges on top of the product image, stacked vertically.
+  Reads the values from the product metafields (each one references a "badge" metaobject):
+    - custom.badge1
+    - custom.badge2
+    - custom.badge3
+
+  Expected metaobject field handles:
+    - color       (background color, hex)
+    - text        (the badge label, also used as the metaobject display name)
+    - text_color  (text color, hex)
+
+  ********************************************
+  Supported variables
+  ********************************************
+
+  * product: the product to inspect
+{%- endcomment -%}
+
+{%- liquid
+  assign badge_1 = product.metafields.custom.badge1.value
+  assign badge_2 = product.metafields.custom.badge2.value
+  assign badge_3 = product.metafields.custom.badge3.value
+-%}
+
+{%- if badge_1 != blank or badge_2 != blank or badge_3 != blank -%}
+  <div class="product-custom-badges">
+    {%- if badge_1 != blank and badge_1.text != blank -%}
+      <span class="product-custom-badges__item" style="--badge-bg: {{ badge_1.color }}; --badge-text: {{ badge_1.text_color }};">{{ badge_1.text }}</span>
+    {%- endif -%}
+    {%- if badge_2 != blank and badge_2.text != blank -%}
+      <span class="product-custom-badges__item" style="--badge-bg: {{ badge_2.color }}; --badge-text: {{ badge_2.text_color }};">{{ badge_2.text }}</span>
+    {%- endif -%}
+    {%- if badge_3 != blank and badge_3.text != blank -%}
+      <span class="product-custom-badges__item" style="--badge-bg: {{ badge_3.color }}; --badge-text: {{ badge_3.text_color }};">{{ badge_3.text }}</span>
+    {%- endif -%}
+  </div>
+{%- endif -%}
