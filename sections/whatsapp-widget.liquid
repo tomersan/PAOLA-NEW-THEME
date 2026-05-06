@@ -1,0 +1,505 @@
+{%- liquid
+  assign s = section.settings
+  assign phone_clean = s.phone | replace: '+', '' | replace: '-', '' | replace: ' ', '' | replace: '(', '' | replace: ')', ''
+-%}
+
+{%- if s.phone != blank -%}
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      --wa-launcher-bg: {{ s.launcher_bg }};
+      --wa-launcher-icon: {{ s.launcher_icon }};
+      --wa-launcher-label-bg: {{ s.launcher_label_bg }};
+      --wa-launcher-label-text: {{ s.launcher_label_text }};
+      --wa-panel-bg: {{ s.panel_bg }};
+      --wa-panel-text: {{ s.panel_text }};
+      --wa-header-bg: {{ s.header_bg }};
+      --wa-header-text: {{ s.header_text }};
+      --wa-send-bg: {{ s.send_bg }};
+      --wa-send-text: {{ s.send_text }};
+      --wa-radius: {{ settings.button_border_radius | default: 8 }}px;
+    }
+
+    .wa-widget {
+      position: fixed;
+      bottom: clamp(16px, 4vw, 28px);
+      {% if s.position == 'left' %}left{% else %}right{% endif %}: clamp(16px, 4vw, 28px);
+      z-index: 90;
+      font-family: var(--text-font-family, inherit);
+      direction: {% if s.force_rtl %}rtl{% else %}inherit{% endif %};
+    }
+
+    {% if s.show_on == 'mobile' %}
+      @media (min-width: 750px) { .wa-widget { display: none; } }
+    {% elsif s.show_on == 'desktop' %}
+      @media (max-width: 749px) { .wa-widget { display: none; } }
+    {% endif %}
+
+    .wa-widget__launcher {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px 12px 14px;
+      background: var(--wa-launcher-label-bg);
+      color: var(--wa-launcher-label-text);
+      border: 1px solid var(--wa-launcher-label-text);
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    }
+
+    .wa-widget__launcher:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18); }
+    .wa-widget__launcher:focus-visible { outline: 2px solid var(--wa-launcher-bg); outline-offset: 3px; }
+
+    .wa-widget__launcher-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--wa-launcher-bg);
+      color: var(--wa-launcher-icon);
+      flex-shrink: 0;
+    }
+
+    .wa-widget__launcher-icon svg { width: 18px; height: 18px; }
+
+    .wa-widget[data-open="true"] .wa-widget__launcher { opacity: 0; pointer-events: none; transform: scale(0.9); }
+
+    .wa-widget__panel {
+      position: absolute;
+      bottom: 0;
+      {% if s.position == 'left' %}left{% else %}right{% endif %}: 0;
+      width: min(360px, calc(100vw - 32px));
+      background: var(--wa-panel-bg);
+      color: var(--wa-panel-text);
+      border-radius: calc(var(--wa-radius) * 2);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
+      transform: translateY(20px) scale(0.96);
+      opacity: 0;
+      visibility: hidden;
+      transition: transform 0.22s ease, opacity 0.22s ease, visibility 0.22s;
+    }
+
+    .wa-widget[data-open="true"] .wa-widget__panel {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .wa-widget__header {
+      background: var(--wa-header-bg);
+      color: var(--wa-header-text);
+      padding: 22px 22px 24px;
+      position: relative;
+    }
+
+    .wa-widget__title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 6px;
+      letter-spacing: 0.01em;
+    }
+
+    .wa-widget__subtitle {
+      font-size: 13px;
+      margin: 0;
+      opacity: 0.75;
+      line-height: 1.5;
+    }
+
+    .wa-widget__close {
+      position: absolute;
+      top: 14px;
+      {% if s.position == 'left' %}right{% else %}left{% endif %}: 14px;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 0;
+      color: inherit;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: background 0.15s ease;
+    }
+
+    .wa-widget__close:hover { background: rgba(255, 255, 255, 0.12); }
+    .wa-widget__close:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+    .wa-widget__close svg { width: 16px; height: 16px; }
+
+    .wa-widget__body { padding: 18px 20px 20px; }
+
+    .wa-widget__hint {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      opacity: 0.7;
+      margin: 0 0 12px;
+    }
+
+    .wa-widget__textarea {
+      width: 100%;
+      min-height: 96px;
+      max-height: 200px;
+      padding: 14px 16px;
+      border: 1px solid currentColor;
+      border-color: color-mix(in srgb, var(--wa-panel-text) 18%, transparent);
+      border-radius: var(--wa-radius);
+      background: var(--wa-panel-bg);
+      color: var(--wa-panel-text);
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      transition: border-color 0.15s ease;
+    }
+
+    .wa-widget__textarea:focus {
+      outline: none;
+      border-color: var(--wa-panel-text);
+    }
+
+    .wa-widget__textarea::placeholder {
+      color: color-mix(in srgb, var(--wa-panel-text) 50%, transparent);
+    }
+
+    .wa-widget__send {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      margin-top: 14px;
+      padding: 14px 20px;
+      background: var(--wa-send-bg);
+      color: var(--wa-send-text);
+      border: 0;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .wa-widget__send:hover:not(:disabled) { transform: translateY(-1px); }
+    .wa-widget__send:focus-visible { outline: 2px solid var(--wa-send-bg); outline-offset: 3px; }
+    .wa-widget__send:disabled { opacity: 0.45; cursor: not-allowed; }
+    .wa-widget__send svg { width: 16px; height: 16px; }
+
+    @media (max-width: 480px) {
+      .wa-widget__panel { width: calc(100vw - 32px); }
+    }
+  {%- endstyle -%}
+
+  <div
+    class="wa-widget"
+    id="wa-widget-{{ section.id }}"
+    data-open="false"
+    data-show-delay="{{ s.show_delay | default: 0 }}"
+    data-remember="{{ s.remember_close }}"
+  >
+    <div
+      class="wa-widget__panel"
+      role="dialog"
+      aria-modal="false"
+      aria-labelledby="wa-widget-title-{{ section.id }}"
+      aria-hidden="true"
+    >
+      <div class="wa-widget__header">
+        <button type="button" class="wa-widget__close" aria-label="{{ s.close_label | default: 'Close' | escape }}" data-wa-close>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <h2 class="wa-widget__title" id="wa-widget-title-{{ section.id }}">{{ s.title }}</h2>
+        <p class="wa-widget__subtitle">{{ s.subtitle }}</p>
+      </div>
+
+      <div class="wa-widget__body">
+        {%- if s.hint != blank -%}
+          <p class="wa-widget__hint">{{ s.hint }}</p>
+        {%- endif -%}
+
+        <label class="sr-only" for="wa-widget-input-{{ section.id }}">{{ s.placeholder }}</label>
+        <textarea
+          id="wa-widget-input-{{ section.id }}"
+          class="wa-widget__textarea"
+          placeholder="{{ s.placeholder | escape }}"
+          rows="3"
+          data-wa-input
+        ></textarea>
+
+        <button type="button" class="wa-widget__send" data-wa-send disabled>
+          <span>{{ s.send_label }}</span>
+          {%- render 'icon' with 'whatsapp', width: 16 -%}
+        </button>
+      </div>
+    </div>
+
+    <button type="button" class="wa-widget__launcher" aria-label="{{ s.launcher_label | escape }}" data-wa-toggle aria-expanded="false">
+      <span>{{ s.launcher_label }}</span>
+      <span class="wa-widget__launcher-icon" aria-hidden="true">
+        {%- render 'icon' with 'whatsapp', width: 18 -%}
+      </span>
+    </button>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.getElementById({{ 'wa-widget-' | append: section.id | json }});
+      if (!root) return;
+      const phone = {{ phone_clean | json }};
+      const toggle = root.querySelector('[data-wa-toggle]');
+      const closeBtn = root.querySelector('[data-wa-close]');
+      const sendBtn = root.querySelector('[data-wa-send]');
+      const input = root.querySelector('[data-wa-input]');
+      const panel = root.querySelector('.wa-widget__panel');
+      const remember = root.dataset.remember === 'true';
+      const delay = parseInt(root.dataset.showDelay, 10) || 0;
+      const STORAGE_KEY = 'wa-widget-closed';
+
+      if (delay > 0) {
+        root.style.opacity = '0';
+        root.style.pointerEvents = 'none';
+        setTimeout(() => {
+          root.style.transition = 'opacity 0.3s ease';
+          root.style.opacity = '';
+          root.style.pointerEvents = '';
+        }, delay * 1000);
+      }
+
+      if (remember && sessionStorage.getItem(STORAGE_KEY) === '1') {
+        root.style.display = 'none';
+        return;
+      }
+
+      function setOpen(open) {
+        root.dataset.open = open ? 'true' : 'false';
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+        if (open) {
+          requestAnimationFrame(() => input && input.focus());
+        }
+      }
+
+      toggle.addEventListener('click', () => setOpen(true));
+      closeBtn.addEventListener('click', () => {
+        setOpen(false);
+        if (remember) sessionStorage.setItem(STORAGE_KEY, '1');
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && root.dataset.open === 'true') setOpen(false);
+      });
+
+      function updateSendState() {
+        sendBtn.disabled = !input.value.trim();
+      }
+      input.addEventListener('input', updateSendState);
+
+      sendBtn.addEventListener('click', () => {
+        const message = input.value.trim();
+        if (!message || !phone) return;
+        const url = 'https://wa.me/' + encodeURIComponent(phone) + '?text=' + encodeURIComponent(message);
+        window.open(url, '_blank', 'noopener');
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+          e.preventDefault();
+          sendBtn.click();
+        }
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "WhatsApp widget",
+  "class": "shopify-section--whatsapp-widget",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Connection"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "WhatsApp phone number",
+      "info": "Include the country code without + (e.g. 972501234567). The widget is hidden if this is empty."
+    },
+    {
+      "type": "header",
+      "content": "Texts"
+    },
+    {
+      "type": "text",
+      "id": "launcher_label",
+      "label": "Launcher button label",
+      "default": "צריכים עזרה?"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Panel title",
+      "default": "היי! 👋 איך נוכל לעזור?"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subtitle",
+      "label": "Panel subtitle",
+      "default": "כתבו לנו ונחזור אליכם בהקדם"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "hint",
+      "label": "Hint above the textarea",
+      "default": "⚡ שלחו לנו הודעה בוואצאפ ונחזור אליכם בהקדם"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Textarea placeholder",
+      "default": "ספרו לנו במה אפשר לעזור..."
+    },
+    {
+      "type": "text",
+      "id": "send_label",
+      "label": "Send button text",
+      "default": "שליחה בוואצאפ"
+    },
+    {
+      "type": "text",
+      "id": "close_label",
+      "label": "Close button accessibility label",
+      "default": "סגירה"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Position",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "show_on",
+      "label": "Show on",
+      "options": [
+        { "value": "both", "label": "Mobile & Desktop" },
+        { "value": "mobile", "label": "Mobile only" },
+        { "value": "desktop", "label": "Desktop only" }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "checkbox",
+      "id": "force_rtl",
+      "label": "Force RTL layout",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "show_delay",
+      "label": "Appearance delay",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "sec",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "remember_close",
+      "label": "Hide for the rest of the session after closing",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Launcher colors"
+    },
+    {
+      "type": "color",
+      "id": "launcher_label_bg",
+      "label": "Launcher background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "launcher_label_text",
+      "label": "Launcher text",
+      "default": "#1c1c1c"
+    },
+    {
+      "type": "color",
+      "id": "launcher_bg",
+      "label": "Icon circle background",
+      "default": "#1c1c1c"
+    },
+    {
+      "type": "color",
+      "id": "launcher_icon",
+      "label": "Icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Panel colors"
+    },
+    {
+      "type": "color",
+      "id": "header_bg",
+      "label": "Header background",
+      "default": "#1c1c1c"
+    },
+    {
+      "type": "color",
+      "id": "header_text",
+      "label": "Header text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "panel_bg",
+      "label": "Body background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "panel_text",
+      "label": "Body text",
+      "default": "#1c1c1c"
+    },
+    {
+      "type": "color",
+      "id": "send_bg",
+      "label": "Send button background",
+      "default": "#1c1c1c"
+    },
+    {
+      "type": "color",
+      "id": "send_text",
+      "label": "Send button text",
+      "default": "#ffffff"
+    }
+  ]
+}
+{% endschema %}

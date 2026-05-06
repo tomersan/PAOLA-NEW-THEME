@@ -17,7 +17,7 @@
         "message_PqdyRP": {
           "type": "message",
           "settings": {
-            "text": "משלוח חינם! ברכישה מעל 249 ש''ח"
+            "text": "משלוח חינם! ברכישה מעל 249₪"
           }
         }
       },
@@ -65,7 +65,7 @@
         "logo": "shopify://shop_images/PAOLA_LOGO_1_1_-1_240x_2x__2_-removebg-preview.avif",
         "logo_max_width": 160,
         "logo_mobile_max_width": 130,
-        "menu": "new-small-menu",
+        "menu": "main-menu",
         "sidebar_menu": "",
         "customer_account_menu": "customer-account-main-menu",
         "menu_open_trigger": "hover",
@@ -77,6 +77,8 @@
         "sidebar_open_second_level_menus": false,
         "layout": "logo_center_navigation_below",
         "show_icons": true,
+        "cart_badge_background": "#e1baae",
+        "cart_badge_text_color": "#000000",
         "mobile_layout": "logo_left_icons_right",
         "mobile_order_search": 5,
         "mobile_order_account": 4,
@@ -89,9 +91,9 @@
         "show_locale_selector": false,
         "enable_liquid_glass": true,
         "liquid_glass_color": "#ffffff",
-        "liquid_glass_opacity": 60,
-        "liquid_glass_blur": 20,
-        "liquid_glass_saturation": 180,
+        "liquid_glass_opacity": 70,
+        "liquid_glass_blur": 45,
+        "liquid_glass_saturation": 160,
         "transparent_header_text_color": "#1c1c1c"
       }
     }

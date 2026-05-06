@@ -28,6 +28,10 @@
       {%- endif -%}
     }
 
+    #shopify-section-{{ section.id }} .collection-list {
+      row-gap: 0.25rem;
+    }
+
     @media screen and (min-width: 700px) {
       #shopify-section-{{ section.id }} {
         {%- if stack_mobile or stack_mobile_and_desktop -%}
@@ -46,6 +50,10 @@
         {%- if section.settings.space_items -%}
           --collection-list-gap: 1.875rem;
         {%- endif -%}
+      }
+
+      #shopify-section-{{ section.id }} .collection-list {
+        row-gap: 0.5rem;
       }
     }
   </style>

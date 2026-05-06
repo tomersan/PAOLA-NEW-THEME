@@ -5,7 +5,7 @@
 {%- endcomment -%}
 {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
 
-<div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+<div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} blog-posts-editorial {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
   <div class="container container--lg">
     <div class="section-stack">
       {%- render 'section-header', subheading: section.settings.subheading, heading: section.settings.title, content: section.settings.content, text_alignment: 'center' -%}
@@ -45,6 +45,177 @@
     </div>
   </div>
 </div>
+
+{% stylesheet %}
+  /* ---------------------------------------------------------------------------
+     Editorial blog cards — 2026 magazine-style refresh
+     Scoped to .blog-posts-editorial so the rest of the theme is untouched.
+     --------------------------------------------------------------------------- */
+
+  .blog-posts-editorial .section-header .h6 {
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    font-weight: 500;
+    opacity: 0.75;
+  }
+
+  .blog-posts-editorial .section-header .h2 {
+    font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.625rem);
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+    text-transform: none;
+    font-weight: 500;
+    margin-block-start: 0.5rem;
+  }
+
+  .blog-posts-editorial .blog-post-list {
+    --blog-post-list-column-gap: 2rem;
+    --blog-post-list-row-gap: 3rem;
+  }
+
+  @media screen and (min-width: 1000px) {
+    .blog-posts-editorial .blog-post-list {
+      --blog-post-list-column-gap: 2.75rem;
+    }
+  }
+
+  .blog-posts-editorial .blog-post-card {
+    gap: 1.25rem;
+  }
+
+  .blog-posts-editorial .blog-post-card > a:has(img),
+  .blog-posts-editorial .blog-post-card > .overflow-hidden {
+    border-radius: 14px;
+    aspect-ratio: 4 / 3;
+    position: relative;
+    isolation: isolate;
+  }
+
+  .blog-posts-editorial .blog-post-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  @media (pointer: fine) {
+    .blog-posts-editorial .blog-post-card:hover .blog-post-card__image {
+      transform: scale(1.04);
+    }
+  }
+
+  .blog-posts-editorial .blog-post-card__info {
+    row-gap: 0.625rem;
+    padding-inline: 0.125rem;
+  }
+
+  .blog-posts-editorial .blog-post-card__meta {
+    column-gap: 0.625rem;
+    margin-block-end: 0.25rem;
+  }
+
+  .blog-posts-editorial .blog-post-card__category {
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    line-height: 1;
+    color: rgb(var(--text-color));
+    opacity: 0.75;
+    position: relative;
+    padding-inline-start: 1.125rem;
+    transition: opacity 0.2s ease;
+  }
+
+  .blog-posts-editorial .blog-post-card__category::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 0;
+    width: 0.625rem;
+    height: 1px;
+    background: currentColor;
+    transform: translateY(-50%);
+  }
+
+  @media (pointer: fine) {
+    .blog-posts-editorial .blog-post-card__category:hover {
+      opacity: 1;
+    }
+  }
+
+  .blog-posts-editorial .blog-post-card__meta .text-subdued {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    opacity: 0.65;
+  }
+
+  .blog-posts-editorial .blog-post-card__title {
+    font-size: clamp(1.125rem, 0.95rem + 0.55vw, 1.4375rem);
+    line-height: 1.3;
+    letter-spacing: -0.012em;
+    text-transform: none;
+    font-weight: 500;
+    color: rgb(var(--text-color));
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.25s ease;
+  }
+
+  @media (pointer: fine) {
+    .blog-posts-editorial .blog-post-card:hover .blog-post-card__title {
+      color: rgb(var(--text-color) / 0.78);
+    }
+  }
+
+  .blog-posts-editorial .blog-post-card__excerpt {
+    color: rgb(var(--text-color) / 0.7);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    letter-spacing: 0;
+    margin-block-start: 0.125rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .blog-posts-editorial .blog-post-card__read-more {
+    margin-block-start: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-image: none;
+    color: rgb(var(--text-color));
+  }
+
+  .blog-posts-editorial .blog-post-card__read-more::after {
+    content: '→';
+    display: inline-block;
+    font-size: 1em;
+    line-height: 1;
+    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  [dir='rtl'] .blog-posts-editorial .blog-post-card__read-more::after {
+    content: '←';
+  }
+
+  @media (pointer: fine) {
+    .blog-posts-editorial .blog-post-card__read-more:hover::after {
+      transform: translateX(4px);
+    }
+
+    [dir='rtl'] .blog-posts-editorial .blog-post-card__read-more:hover::after {
+      transform: translateX(-4px);
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {

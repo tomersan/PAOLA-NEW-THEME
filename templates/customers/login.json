@@ -1,1 +1,61 @@
-{"sections":{"main":{"type":"main-customers-login","blocks":{"fields":{"type":"fields","settings":{}}},"block_order":["fields"],"settings":{}}},"order":["main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-customers-login",
+      "blocks": {
+        "quick_login_otp_login_form_cdVHPn": {
+          "type": "shopify://apps/quick-login/blocks/otp-login-form/7d4d5c68-b05d-4581-94d9-37d1956eb8c2",
+          "settings": {
+            "title": "היי, טוב לראות אותך!",
+            "phone_label": "אנא מלאי את מספר הטלפון הנייד לקבלת קוד התחברות",
+            "otp_button_text": "התחברות",
+            "email_button_text": "",
+            "phone_otp_label": "",
+            "verify_otp_button_text": "",
+            "email_address_request_label": "",
+            "login_with_email_button_text": "",
+            "email_otp_label": "",
+            "verify_email_button_text": "",
+            "resend_otp_code_text": "",
+            "error_message_otp": "",
+            "error_message_general": "",
+            "registration_message": "",
+            "registration_button_text": "",
+            "try_different_account_text": "",
+            "hide_email_login": false,
+            "button_background_color": "#000",
+            "button_text_color": "#ffffff"
+          }
+        },
+        "fields": {
+          "type": "fields",
+          "disabled": true,
+          "settings": {
+            "return_to": ""
+          }
+        }
+      },
+      "block_order": [
+        "quick_login_otp_login_form_cdVHPn",
+        "fields"
+      ],
+      "custom_css": [
+        "h1{display:none;}",
+        "P{display:none;}"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

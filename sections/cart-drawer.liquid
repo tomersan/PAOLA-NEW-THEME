@@ -1,3 +1,9 @@
+<style>
+  .cart-drawer.drawer--center-body:has(free-shipping-bar)::part(body) {
+    align-self: start;
+  }
+</style>
+
 <cart-drawer
   id="cart-drawer"
   aria-label="{{ 'cart.general.title' | t | escape_once }}"
