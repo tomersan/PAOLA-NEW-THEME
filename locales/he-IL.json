@@ -117,7 +117,7 @@
       "previous": "הקודם",
       "next": "הבא",
       "star_reviews_info": "{{ rating_value }} מתוך {{ rating_max }} כוכבים",
-      "skip_to_content": "",
+      "skip_to_content": "דלג לתוכן",
       "pagination": "",
       "go_to_page": "",
       "go_to_item": "",
@@ -150,8 +150,8 @@
       "login_title": "אתה בעל החנות?",
       "login_link": "הכניסי כאן"
     },
-    "page": "",
-    "home": "",
+    "page": "עמוד {{ page }}",
+    "home": "בית",
     "label": {
       "color": "",
       "white": "",
@@ -2280,18 +2280,18 @@
       "other": ""
     },
     "faceting": {
-      "filters": "",
-      "filter_button": "",
-      "clear_filters": "",
-      "apply_filters": "",
-      "sort_by": "",
-      "remove_filter": "",
-      "no_results": "",
+      "filters": "סינונים",
+      "filter_button": "סינון",
+      "clear_filters": "נקה הכל",
+      "apply_filters": "צפה בתוצאות",
+      "sort_by": "מיין לפי",
+      "remove_filter": "מחק פילטר \"{{ name }}\"",
+      "no_results": "אין מוצרים תואמים לחיפוש",
       "price_range_to": "",
       "price_filter_from": "",
       "price_filter_to": "",
       "price_filter": "",
-      "in_stock_only": ""
+      "in_stock_only": "במלאי בלבד"
     }
   },
   "product": {

@@ -5092,6 +5092,7 @@ product-rerender {
   position: sticky;
   inset-block-start: var(--sticky-area-height);
   inset-inline-start: 0;
+  top: 1px;
 }
 
 .collection-toolbar .popover {
